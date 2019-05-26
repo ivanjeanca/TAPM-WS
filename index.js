@@ -2,20 +2,13 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
-const port = 3000
 var fs = require('fs')
 var https = require('https')
+const port = 3000
 
-const corsConfig = {
-  origin: '*',
-  optionsSuccessStatus: 200
-}
+const corsConfig = { origin: '*', optionsSuccessStatus: 200 }
 app.use(bodyParser.json())
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-  })
-)
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors(corsConfig))
 
 const API_Peliculas = require('./routes/peliculas')
