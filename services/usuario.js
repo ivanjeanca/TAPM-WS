@@ -1,3 +1,4 @@
+const midd = require("../middleware")
 const Pool = require("pg").Pool
 const pool = new Pool({
     user: "el_palomo",
@@ -117,11 +118,33 @@ const deleteUsuario = (request, response) => {
     )
 }
 
+const login = (request, response) => {
+    const { correo, contrasena } = request.body
+    var val = 0
+    pool.query(
+        "select nombre, apaterno, amaterno, correo from usuario where correo = $1 and contrasena = md5($2);",
+        [correo, contrasena],
+        (error, results) => {
+            if (error)
+                throw error
+            else
+                val = 1
+
+            token = {
+                token: midd.authentication(results.rows),
+                valid: val
+            }
+            response.status(200).json(token)
+        }
+    )
+}
+
 module.exports = {
     getUsuarios,
     getUsuarioByEmail,
     getUsuarioById,
     newUsuario,
     updateUsuario,
-    deleteUsuario
+    deleteUsuario,
+    login
 }

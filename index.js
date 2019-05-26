@@ -1,21 +1,22 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const cors = require('cors');
+const cors = require('cors')
 const app = express()
 const port = 3000
+var fs = require('fs')
+var https = require('https')
 
 const corsConfig = {
   origin: '*',
   optionsSuccessStatus: 200
-};
-
+}
 app.use(bodyParser.json())
 app.use(
   bodyParser.urlencoded({
     extended: false,
   })
 )
-app.use(cors(corsConfig));
+app.use(cors(corsConfig))
 
 const API_Peliculas = require('./routes/peliculas')
 const API_Clasificaciones = require('./routes/clasificacion')
@@ -29,6 +30,10 @@ app.use('/api/funciones', API_Funciones)
 app.use('/api/reservaciones', API_Reservaciones)
 app.use('/api/usuarios', API_Usuarios)
 
-app.listen(port, () => {
-    console.log(`App running on port ${port}.`)
+https.createServer({
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.cert')
+}, app)
+.listen(port, () => {
+  console.log(`App running on port ${port}.`)
 })
